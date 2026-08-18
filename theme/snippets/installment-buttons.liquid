@@ -19,10 +19,20 @@
   data-price="{{ product.selected_or_first_available_variant.price | divided_by: 100.0 }}"
   {%- endif %}
 >
+  <p class="installment-buttons__label">
+    {%- if mode == 'cart' -%}
+      ან გადაიხადეთ მთელი კალათა განვადებით
+    {%- else -%}
+      ან შეიძინეთ განვადებით
+    {%- endif -%}
+  </p>
+
   <button type="button" class="installment-btn installment-btn--bog" data-bank="bog">
+    <span class="installment-btn__badge">BOG</span>
     განვადება — საქართველოს ბანკი
   </button>
   <button type="button" class="installment-btn installment-btn--credo" data-bank="credo">
+    <span class="installment-btn__badge">Credo</span>
     განვადება — კრედო ბანკი
   </button>
   <p class="installment-status" hidden></p>
