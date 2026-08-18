@@ -30,7 +30,7 @@
 .installment-btn {
   display: flex;
   align-items: center;
-  gap: 0.9rem;
+  gap: 1rem;
   width: 100%;
   padding: 1.15rem 1.4rem;
   border-radius: 10px;
@@ -51,35 +51,30 @@
   transform: scale(0.99);
 }
 
-.installment-btn__badge {
+.installment-btn__logo {
   flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 4.4rem;
+  display: block;
   height: 2.4rem;
-  padding: 0 0.6rem;
-  border-radius: 7px;
-  font-size: 1rem;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  color: #fff;
+  width: auto;
+  object-fit: contain;
+}
+
+.installment-btn__logo--bog {
+  max-width: 2.4rem; /* კვადრატული ემბლემა */
+}
+
+.installment-btn__logo--credo {
+  max-width: 5.2rem; /* გაშლილი wordmark, 1200x700 პროპორცია */
 }
 
 .installment-btn--bog {
   border-color: #f9423a;
   color: #c81e18;
 }
-.installment-btn--bog .installment-btn__badge {
-  background: #f9423a;
-}
 
 .installment-btn--credo {
   border-color: #005baa;
   color: #00468a;
-}
-.installment-btn--credo .installment-btn__badge {
-  background: #005baa;
 }
 
 .installment-btn:disabled {
@@ -100,5 +95,14 @@
   .installment-btn {
     font-size: 1.15rem;
     padding: 1.25rem 1.5rem;
+  }
+  .installment-btn__logo {
+    height: 2.7rem;
+  }
+  .installment-btn__logo--bog {
+    max-width: 2.7rem;
+  }
+  .installment-btn__logo--credo {
+    max-width: 5.8rem;
   }
 }
