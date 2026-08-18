@@ -1,0 +1,30 @@
+{%- comment -%}
+  vestahome.ge (Dawn თემა) — "განვადებით ყიდვის" ღილაკები.
+
+  სად ჩასვათ: Shopify Admin -> Online Store -> Themes -> Edit code ->
+  sections/main-product.liquid ფაილში, სადაც "buy-buttons" block-ია
+  (ჩვეულებრივ product-form-ის/ADD TO CART ღილაკის მახლობლად), დაამატეთ:
+
+    {% render 'installment-buttons', product: product %}
+
+{%- endcomment -%}
+
+<div
+  class="installment-buttons"
+  data-installment-widget
+  data-product-id="{{ product.id }}"
+  data-product-title="{{ product.title | escape }}"
+  data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+  data-price="{{ product.selected_or_first_available_variant.price | divided_by: 100.0 }}"
+>
+  <button type="button" class="installment-btn installment-btn--bog" data-bank="bog">
+    განვადება — საქართველოს ბანკი
+  </button>
+  <button type="button" class="installment-btn installment-btn--credo" data-bank="credo">
+    განვადება — კრედო ბანკი
+  </button>
+  <p class="installment-status" hidden></p>
+</div>
+
+{{ 'installment-widget.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'installment-widget.js' | asset_url }}" defer></script>

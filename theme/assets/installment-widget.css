@@ -1,0 +1,39 @@
+.installment-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.installment-btn {
+  display: block;
+  width: 100%;
+  padding: 0.9rem 1.2rem;
+  border-radius: 6px;
+  border: 1px solid #cfcfcf;
+  background: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+}
+
+.installment-btn--bog {
+  border-color: #f9423a;
+  color: #f9423a;
+}
+
+.installment-btn--credo {
+  border-color: #005baa;
+  color: #005baa;
+}
+
+.installment-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.installment-status {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
