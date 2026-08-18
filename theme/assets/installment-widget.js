@@ -3,9 +3,7 @@
 // რომელიც ქმნის Shopify Draft Order-ს + ბანკის შეკვეთას და აბრუნებს redirect ბმულს.
 
 (function () {
-  // ⚠️ ჩაანაცვლეთ ეს მისამართი backend-ის deploy-ის შემდეგ მიღებული URL-ით
-  // (მაგ. https://vestahome-installments.onrender.com)
-  var BACKEND_URL = 'https://your-backend-domain.example.com';
+  var BACKEND_URL = 'https://vestahome-installments.onrender.com';
 
   function findVariantId(widget) {
     var scope = widget.closest('.product, [data-product], body') || document;
