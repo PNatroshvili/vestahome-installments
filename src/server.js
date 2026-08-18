@@ -10,6 +10,27 @@ const { router: adminRouter, pollCredoOnce } = require('./routes/admin');
 
 const app = express();
 
+// CORS — რომ vestahome.ge-ს თემიდან (ბრაუზერიდან) fetch()-ით მოთხოვნები
+// ჩვენს backend-მდე ჩავიდეს. მხოლოდ ჩვენი მაღაზიის დომენებს ვუშვებთ.
+const ALLOWED_ORIGINS = new Set([
+  'https://vestahome.ge',
+  'https://www.vestahome.ge',
+  'https://mc1gjm-nn.myshopify.com',
+]);
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && ALLOWED_ORIGINS.has(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Vary', 'Origin');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  }
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  next();
+});
+
 app.get('/health', (req, res) => res.json({ ok: true }));
 
 // checkout & admin routes მუშაობენ JSON body-ით
