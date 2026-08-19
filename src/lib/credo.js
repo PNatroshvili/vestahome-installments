@@ -91,6 +91,19 @@ async function createOrder({
     return { redirectUrl: location };
   }
 
+  // ⚠️ რეალურად Credo პასუხობს HTTP 200-ით (redirect: 'manual'-საც არ სჭირდება)
+  // და გადამისამართებას აბრუნებს "Refresh" header-ის საშუალებით
+  // (მაგ. `refresh: 0.1;url=https://ganvadeba.credo.ge/installment/...`) —
+  // არა `Location`-ით და არა JSON body-ით, როგორც დოკუმენტაციიდან
+  // თავდაპირველად ვივარაუდეთ. დადასტურებულია რეალურ API-ზე ტესტირებით.
+  const refreshHeader = res.headers.get('refresh');
+  if (refreshHeader) {
+    const match = refreshHeader.match(/url=(\S+)/i);
+    if (match) {
+      return { redirectUrl: match[1] };
+    }
+  }
+
   const text = await res.text();
   let data;
   try {
