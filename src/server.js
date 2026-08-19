@@ -36,6 +36,15 @@ app.get('/health', (req, res) => res.json({ ok: true }));
 // დროებითი დიაგნოსტიკური route — რომ ვნახოთ ამ სერვერის outbound IP,
 // რომელიც Credo-ს whitelist-ში უნდა მიუთითოთ. მუშაობის დასრულების
 // შემდეგ შეგიძლიათ წაშალოთ.
+app.get('/debug/config-check', (req, res) => {
+  res.json({
+    credoMerchantIdSet: Boolean(config.credo.merchantId),
+    credoMerchantIdPreview: config.credo.merchantId ? String(config.credo.merchantId).slice(0, 3) + '***' : null,
+    credoPasswordSet: Boolean(config.credo.password),
+    bogClientIdSet: Boolean(config.bog.clientId),
+  });
+});
+
 app.get('/debug/outbound-ip', async (req, res) => {
   try {
     const r = await fetch('https://api.ipify.org?format=json');
