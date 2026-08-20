@@ -7,6 +7,35 @@
 (function () {
   var BACKEND_URL = 'https://vestahome-installments.onrender.com';
 
+  // ერთი საერთო, სრულეკრანიანი overlay — რომ მომხმარებელმა ცხადად დაინახოს,
+  // რომ გადამისამართება რამდენიმე წამში მოხდება, და ამასობაში ვერაფერზე
+  // დააჭიროს (overlay-ს ვერაფერი "ეხედება" ქვემოთ, keyboard/click დაბლოკილია).
+  function getOverlay() {
+    var el = document.getElementById('installment-overlay');
+    if (el) return el;
+    el = document.createElement('div');
+    el.id = 'installment-overlay';
+    el.className = 'installment-overlay';
+    el.hidden = true;
+    el.innerHTML =
+      '<div class="installment-overlay__box">' +
+      '<div class="installment-overlay__spinner" aria-hidden="true"></div>' +
+      '<p class="installment-overlay__text">გთხოვთ მოიცადოთ...</p>' +
+      '<p class="installment-overlay__subtext">რამდენიმე წამში გადაგამისამართებთ ბანკის გვერდზე — გვერდი არ დახუროთ და არ დააჭიროთ სხვა ღილაკებს.</p>' +
+      '</div>';
+    document.body.appendChild(el);
+    return el;
+  }
+
+  function showOverlay() {
+    getOverlay().hidden = false;
+  }
+
+  function hideOverlay() {
+    var el = document.getElementById('installment-overlay');
+    if (el) el.hidden = true;
+  }
+
   function findVariantId(widget) {
     var scope = widget.closest('.product, [data-product], body') || document;
     var input = scope.querySelector('form[action*="/cart/add"] [name="id"]') || document.querySelector('[name="id"]');
@@ -69,6 +98,7 @@
     var allButtons = widget.querySelectorAll('.installment-btn');
 
     function fail(message) {
+      hideOverlay();
       if (statusEl) {
         statusEl.hidden = false;
         statusEl.textContent = message;
@@ -87,10 +117,7 @@
       allButtons.forEach(function (b) {
         b.disabled = true;
       });
-      if (statusEl) {
-        statusEl.hidden = false;
-        statusEl.textContent = 'გთხოვთ მოიცადოთ, მიმდინარეობს გადამისამართება...';
-      }
+      showOverlay();
 
       fetch(BACKEND_URL + '/api/checkout/start', {
         method: 'POST',
@@ -104,6 +131,7 @@
           });
         })
         .then(function (data) {
+          // overlay-ს განზრახ არ ვმალავთ — გვერდი ისედაც ტოვებს ამ საიტს.
           window.location.href = data.redirectUrl;
         })
         .catch(function (err) {
@@ -115,6 +143,7 @@
       allButtons.forEach(function (b) {
         b.disabled = true;
       });
+      showOverlay();
       fetchCartItems()
         .then(proceed)
         .catch(function (err) {
