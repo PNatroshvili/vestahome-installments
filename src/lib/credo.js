@@ -67,23 +67,34 @@ async function createOrder({
   factAddress,
 }) {
   const check = buildCheckHash(products);
-  const payload = {
-    merchantId: config.credo.merchantId,
-    orderCode,
-    check,
-    products,
-  };
-  if (installmentLength) payload.installmentLength = installmentLength;
-  if (clientFullName) payload.clientFullName = clientFullName;
-  if (mobile) payload.mobile = mobile;
-  if (email) payload.email = email;
-  if (factAddress) payload.factAddress = factAddress;
+
+  // ⚠️ დადასტურებულია რეალურ ტესტირებაზე (2026-08-20): Credo-ს widget_api
+  // PHP endpoint-ს JSON body საერთოდ არ ესმის (ალბათ $_POST-ს ეყრდნობა) —
+  // JSON-ით ყოველთვის "not-available"-ზე მიდიოდა, credentials-ის
+  // სისწორის მიუხედავად. სწორი ფორმატია application/x-www-form-urlencoded,
+  // მასივები კი PHP-ის bracket notation-ით (products[0][id] და ა.შ.).
+  const params = new URLSearchParams();
+  params.append('merchantId', config.credo.merchantId);
+  params.append('orderCode', orderCode);
+  params.append('check', check);
+  products.forEach((p, i) => {
+    params.append(`products[${i}][id]`, p.id);
+    params.append(`products[${i}][title]`, p.title);
+    params.append(`products[${i}][amount]`, p.amount);
+    params.append(`products[${i}][price]`, p.price);
+    params.append(`products[${i}][type]`, p.type);
+  });
+  if (installmentLength) params.append('installmentLength', installmentLength);
+  if (clientFullName) params.append('clientFullName', clientFullName);
+  if (mobile) params.append('mobile', mobile);
+  if (email) params.append('email', email);
+  if (factAddress) params.append('factAddress', factAddress);
 
   const res = await fetch(CREATE_ORDER_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     redirect: 'manual',
-    body: JSON.stringify(payload),
+    body: params.toString(),
   });
 
   const location = res.headers.get('location');
